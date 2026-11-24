@@ -1,95 +1,179 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Red Button">
+
 <title>Press the Red Button</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&display=swap" rel="stylesheet">
+
 <style>
-:root{
-  --bg:#dde2e8; --ink:#1a2330; --ring:#b9c1cb; --ring-edge:#9aa4b1; --muted:#4b5767;
-  --red-hi:#ff6d60; --red:#e11d1d; --red-lo:#a50f0f; --red-edge:#7a0909;
-  color-scheme:light;
-  box-sizing:border-box;
-  padding-top:env(safe-area-inset-top,0px);
-  padding-bottom:env(safe-area-inset-bottom,0px);
+* {
+    -webkit-tap-highlight-color: transparent;
+    box-sizing: border-box;
 }
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){
-    --bg:#12161c; --ink:#eef1f5; --ring:#2a323d; --ring-edge:#3a4452; --muted:#9aa5b4;
-    color-scheme:dark;
-  }
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background:
+        radial-gradient(circle at center,
+        #fafafa 0%,
+        #e5e5e5 60%,
+        #d0d0d0 100%);
 }
-:root[data-theme="dark"]{
-  --bg:#12161c; --ink:#eef1f5; --ring:#2a323d; --ring-edge:#3a4452; --muted:#9aa5b4;
-  color-scheme:dark;
+
+.container {
+    text-align: center;
+    padding: 20px;
 }
-*,*::before,*::after{box-sizing:inherit}
-html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
-body{
-  margin:0;min-height:100%;background:var(--bg);color:var(--ink);
-  font-family:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:clamp(28px,7vh,56px);padding:24px;text-align:center;
+
+h1 {
+    color: #222;
+    margin-bottom: 40px;
+    font-size: clamp(1.8rem, 4vw, 3rem);
 }
-h1{
-  margin:0;font-weight:800;line-height:.95;letter-spacing:.005em;
-  font-size:clamp(2.8rem,13vw,5.5rem);max-width:12ch;
+
+.button-base {
+    width: min(70vw, 300px);
+    height: min(70vw, 300px);
+    background: #555;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow:
+        0 25px 40px rgba(0,0,0,.35),
+        inset 0 8px 12px rgba(255,255,255,.25);
 }
-.base{
-  width:min(74vw,320px);aspect-ratio:1;border-radius:50%;border:0;padding:0;
-  background:var(--ring);cursor:pointer;display:grid;place-items:center;
-  box-shadow:inset 0 0 0 7px var(--ring-edge),0 22px 34px -14px rgba(0,0,0,.5);
-  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+
+#redButton {
+    width: 85%;
+    height: 85%;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    outline: none;
+
+    background:
+        radial-gradient(circle at 35% 25%,
+        #ffbcbc 0%,
+        #ff6363 20%,
+        #ff0000 45%,
+        #b10000 75%,
+        #6f0000 100%);
+
+    box-shadow:
+        inset 0 12px 18px rgba(255,255,255,.45),
+        inset 0 -12px 18px rgba(0,0,0,.35),
+        0 12px 18px rgba(0,0,0,.3);
+
+    transition:
+        transform .08s ease,
+        box-shadow .08s ease;
 }
-.base:focus-visible{outline:4px solid var(--ink);outline-offset:6px}
-.cap{
-  width:78%;aspect-ratio:1;border-radius:50%;display:block;
-  background:radial-gradient(circle at 36% 30%,var(--red-hi) 0,var(--red) 40%,var(--red-lo) 100%);
-  box-shadow:0 12px 0 var(--red-edge),0 20px 24px rgba(0,0,0,.4);
-  transform:translateY(-8px);
-  transition:transform .08s ease-out,box-shadow .08s ease-out;
+
+#redButton:active {
+    transform: translateY(10px);
+    box-shadow:
+        inset 0 5px 10px rgba(255,255,255,.25),
+        inset 0 -5px 10px rgba(0,0,0,.4);
 }
-.base:active .cap,.base.down .cap{
-  transform:translateY(4px);
-  box-shadow:0 2px 0 var(--red-edge),0 4px 8px rgba(0,0,0,.4);
+
+#counter {
+    margin-top: 30px;
+    color: #444;
+    font-size: 1rem;
+    font-weight: 500;
 }
-#status{margin:0;min-height:1.5em;font-size:1.5rem;font-weight:700;color:var(--muted)}
-@media (prefers-reduced-motion:reduce){.cap{transition:none}}
 </style>
 </head>
+
 <body>
-<h1>Press the Red Button</h1>
-<button class="base" id="btn" type="button" aria-label="Red button"><span class="cap"></span></button>
-<p id="status" aria-live="polite">&nbsp;</p>
+
+<div class="container">
+
+    <h1>Press the Red Button</h1>
+
+    <div class="button-base">
+        <button id="redButton" aria-label="Press the Red Button"></button>
+    </div>
+
+    <div id="counter"></div>
+
+</div>
+
 <script>
-(function(){
-  var btn=document.getElementById('btn'),status=document.getElementById('status'),n=0,ctx=null,KEY='redButtonPresses';
-  try{n=parseInt(localStorage.getItem(KEY),10)||0}catch(e){n=0}
-  function show(){status.textContent=n===0?'\u00a0':(n===1?'You have pressed it 1 time.':'You have pressed it '+n+' times.')}
-  show();
-  function click(){
-    try{
-      ctx=ctx||new (window.AudioContext||window.webkitAudioContext)();
-      var o=ctx.createOscillator(),g=ctx.createGain();
-      o.type='square';o.frequency.setValueAtTime(180,ctx.currentTime);
-      o.frequency.exponentialRampToValueAtTime(60,ctx.currentTime+.08);
-      g.gain.setValueAtTime(.15,ctx.currentTime);
-      g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.1);
-      o.connect(g);g.connect(ctx.destination);o.start();o.stop(ctx.currentTime+.1);
-    }catch(e){}
-    try{if(navigator.vibrate)navigator.vibrate(30)}catch(e){}
-  }
-  btn.addEventListener('click',function(){
-    n++;click();
-    try{localStorage.setItem(KEY,String(n))}catch(e){}
-    btn.classList.add('down');
-    setTimeout(function(){btn.classList.remove('down')},140);
-    show();
-  });
-})();
+const STORAGE_KEY = "redButtonCount";
+
+let count =
+    Number(localStorage.getItem(STORAGE_KEY)) || 0;
+
+const counter =
+    document.getElementById("counter");
+
+function updateCounter() {
+    counter.textContent =
+        "Your personal press count: " + count;
+}
+
+updateCounter();
+
+function playClick() {
+    try {
+        const AudioCtx =
+            window.AudioContext ||
+            window.webkitAudioContext;
+
+        const ctx = new AudioCtx();
+
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = "square";
+        osc.frequency.value = 180;
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        gain.gain.setValueAtTime(
+            0.15,
+            ctx.currentTime
+        );
+
+        gain.gain.exponentialRampToValueAtTime(
+            0.001,
+            ctx.currentTime + 0.10
+        );
+
+        osc.start();
+        osc.stop(ctx.currentTime + 0.10);
+    } catch (e) {
+        console.log("Audio unavailable");
+    }
+}
+
+document
+.getElementById("redButton")
+.addEventListener("click", () => {
+
+    count++;
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        count
+    );
+
+    updateCounter();
+    playClick();
+});
 </script>
+
 </body>
 </html>
